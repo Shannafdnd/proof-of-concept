@@ -3,32 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/styles/index.css" rel="stylesheet">
     <title>Document</title>
 </head>
 <body>
-    <div class="roles">
-        <%- data_roles.data %>
-    </div>
-    <div id="calendar">
-        <% data_week.data.forEach((week) => {
-            const [year, week_nr] = week.week.split("-W");
-            const currentDate = getDateOfIsoWeek(week_nr, year);
-            %>
-            <div class="week">
-                <% for (let i = 0; i < 7; i++) { %>
-                    <div class="day">
-                        <%= currentDate.toLocaleDateString('nl-NL', {
-                            weekday: "long",
-                            day: "numeric",
-                            month: "long"
-                        }) %>
-                    </div>
-                <% 
-                currentDate.setDate(currentDate.getDate() + 1);
-                } %>
-            </div>
+    <div id="calendar-wrapper">
+        <div id="roles">
             <%
-        }) %>
+            // for each role, create a div
+            data_roles.data.forEach(({id, role}) => { %>
+                <div class="role-name"><%= role %></div>
+            <% }) %>
+        </div>
+        <div id="calendar">
+            <%
+            // for each week, create a div
+            data_week.data.forEach((week) => {
+                const [year, week_nr] = week.week.split("-W");
+                const currentDate = getDateOfIsoWeek(week_nr, year);
+                %>
+                <div class="week">
+                    <%
+                    // for each day, create a div displaying the date
+                    for (let i = 0; i < 7; i++) { %>
+                        <div class="day">
+                            <%= currentDate.toLocaleDateString('nl-NL', {
+                                weekday: "long",
+                                day: "numeric",
+                                month: "long"
+                            }) %>
+                        </div>
+                        <%
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    // if this week has assignments
+                    if (week.assignments.length > 0) {
+                        const assignments = data_assignments.data.find(({id}) => id === week.assignments[0]); //find the assignment of current week
+                        
+                        // create a div for each assignment
+                        assignments.role.forEach((role, i) => {
+                            const person = data_persons.data.find(({id}) => id === assignments.person[i]); //find the person of this assignment
+                            %>
+                            <div class="assignment role-<%= role %>"><%= person.name %></div>
+                            <%
+                        });
+                        for (let i = 1; i <= 5; i++) { //create a button for each role
+                            %>
+                            <form class="add-assignment role-<%= i %>" method="post" action="/">
+                                <input name="role-id" type="hidden" value="<%= i %>">
+                                <button>Add</button>
+                            </form>
+                            <%
+                        }
+                    } %>
+                </div>
+            <% }) %>
+        </div>
     </div>
 </body>
 </html>

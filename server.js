@@ -22,8 +22,9 @@ app.get('/', (req, res) => {
         fetchJson(apiUrl + '/anwb_week'),
         fetchJson(apiUrl + '/anwb_persons'),
         fetchJson(apiUrl + '/anwb_roles'),
-    ]).then(([data_week, data_persons, data_roles]) => {
-        res.render('index.ejs', {data_week, data_persons, data_roles})
+        fetchJson(apiUrl + '/anwb_assignments'),
+    ]).then(([data_week, data_persons, data_roles, data_assignments]) => {
+        res.render('index.ejs', {data_week, data_persons, data_roles, data_assignments})
     })
 })
 
