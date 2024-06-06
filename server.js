@@ -1,6 +1,7 @@
 // *** Express setup ***
 import express from 'express'
 import fetchJson from './helpers/fetch-json.js'
+import getDateOfIsoWeek from './helpers/week-to-date.js';
 
 const app = express(),
 apiUrl = 'https://fdnd-agency.directus.app/items';
@@ -10,6 +11,8 @@ app.set('views', './views')
 app.set('port', process.env.PORT || 8000)
 app.use(express.static('./public'))
 app.use(express.urlencoded({extended: true}))
+app.locals.getDateOfIsoWeek = getDateOfIsoWeek;
+app.locals.banana = "cool";
 
 // *** Routes ***
 

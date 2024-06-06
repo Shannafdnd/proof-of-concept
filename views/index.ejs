@@ -6,6 +6,29 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="calendar"></div>
+    <div class="roles">
+        <%- data_roles.data %>
+    </div>
+    <div id="calendar">
+        <% data_week.data.forEach((week) => {
+            const [year, week_nr] = week.week.split("-W");
+            const currentDate = getDateOfIsoWeek(week_nr, year);
+            %>
+            <div class="week">
+                <% for (let i = 0; i < 7; i++) { %>
+                    <div class="day">
+                        <%= currentDate.toLocaleDateString('nl-NL', {
+                            weekday: "long",
+                            day: "numeric",
+                            month: "long"
+                        }) %>
+                    </div>
+                <% 
+                currentDate.setDate(currentDate.getDate() + 1);
+                } %>
+            </div>
+            <%
+        }) %>
+    </div>
 </body>
 </html>
