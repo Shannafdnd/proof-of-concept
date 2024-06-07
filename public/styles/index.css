@@ -8,14 +8,14 @@
     padding-top: 3rem;
 
     row-gap: 1rem;
+}
 
-    .role-name {
-        height: 4rem;
-        display: flex;
-        align-items: center;
-        text-align: end;
-        padding-right: 1rem;
-    }
+.role-name {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    text-align: end;
+    padding-right: 1rem;
 }
 
 #calendar {
@@ -32,6 +32,7 @@
 
 .week {
     scroll-snap-align: center;
+    scroll-snap-stop: always;
 
     display: grid;
     row-gap: 1rem;
@@ -54,6 +55,22 @@
     border-radius: 1rem;
 }
 
+.add-assignment {
+    grid-column: 1 / 8;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid black;
+    border-radius: 1rem;
+}
+
+.add-assignment button {
+    width: calc(50% / 7);
+    height: 50%;
+}
+
 .role-1 {
     grid-row: 2 / 2;
 }
@@ -74,27 +91,27 @@
     grid-row: 6 / 6;
 }
 
-.role-1 + .role-1 {
+.role-1 ~ .role-1 {
     display: none;
 }
 
-.role-2 + .role-2 {
+.role-2 ~ .role-2 {
     display: none;
 }
 
-.role-3 + .role-3 {
+.role-3 ~ .role-3 {
     display: none;
 }
 
-.role-4 + .role-4 {
+.role-4 ~ .role-4 {
     display: none;
 }
 
-.role-5 + .role-5 {
+.role-5 ~ .role-5 {
     display: none;
 }
 
-.add-assignment button {
-    width: 100%;
-    height: 100%;
-}
+/* BRONNEN :
+https://css-tricks.com/snippets/css/complete-guide-grid/#aa-grid-template-columnsgrid-template-rows
+https://developer.mozilla.org/en-US/docs/Web/CSS/Next-sibling_combinator 
+*/

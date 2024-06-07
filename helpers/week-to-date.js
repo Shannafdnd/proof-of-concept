@@ -32,3 +32,6 @@ export default function getDateOfIsoWeek(week, year) {
   
     return isoWeekStart;
 }
+
+//BRON:
+//https://stackoverflow.com/questions/16590500/calculate-date-from-week-number-in-javascript 
