@@ -1,73 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/styles/index.css" rel="stylesheet">
-    <title>Document</title>
+<%- include('./partials/head') %>
+<link href="/styles/index.css" rel="stylesheet">
+<script src="scripts/client.js" defer></script>
 </head>
 <body>
-    <div id="calendar-wrapper">
+    <%- include('./partials/nav') %>
+    <main>
+        <div id="calendar-and-roles">
 
-        <div id="roles">
-            <%
-            // for each role, create a div
-            roles.forEach(({id, role}) => { %>
-                <div class="role-name"><%= role %></div>
-            <% }) %>
-        </div>
+            <div id="roles">
+                <%
+                // for each role, create a div
+                roles.forEach(({id, role}) => { %>
+                    <div class="role-name"><%= role %></div>
+                <% }) %>
+            </div>
 
-        <div id="calendar">
-            <%
-            // for each week, create a div
-            weeks.forEach((week) => {
-                const currentDate = getDateOfIsoWeek(week.week);//Calculate starting date from helpers
-                %>
-                <div class="week">
-                    <%
-                    // for each day, create a div displaying the date
-                    for (let i = 0; i < 7; i++) { %>
-                        <div class="day">
-                            <%= currentDate.toLocaleDateString('nl-NL', dateFormat) %>
-                        </div>
-                        <%
-                        currentDate.setDate(currentDate.getDate() + 1); //Current date plus one
-                    }
-
-                    // if this week has assignments
-                    if (week.assignments.length > 0) {
-                        // create a div for each assignment
-                        week.assignments[0].anwb_assignments_id.role.forEach(({anwb_roles_id: role}, i) => {
-                            console.log(week.assignments[0].anwb_assignments_id.person[i].anwb_persons_id.name, "has role", role);
-                            %>
-                            <div class="assignment role-<%= role %>"><%=  week.assignments[0].anwb_assignments_id.person[i].anwb_persons_id.name %></div>
-                            <%
-                        });
-                    }
-                    
-                    for (let i = 1; i <= 5; i++) { //create a button for each role
-                        %>
-                        <form class="add-assignment role-<%= i %>" method="post" action="/add_assignment/<%= week.id %>/<%= i %>">
-                            <button>Add</button>
-                        </form>
-                        <%
-                    }
-                    %>
+            <div id="calendar-wrapper">
+                <h1>Welkom <%= username %></h1>
+                <div class="calendar-buttons">
+                    <button onclick="scrollCalendar(-1)">
+                        <img src="/assets/60053-chevron-left.svg"
+                    </button>
+                    <button onclick="scrollCalendar(1)">
+                        <img src="/assets/60054-chevron-right.svg"
+                    </button>
                 </div>
-            <% }) %>
+                <div id="calendar">
+                    <%
+                    // for each week, create a div
+                    weeks.forEach((week) => {
+                        const currentDate = getDateOfIsoWeek(week.week);//Calculate starting date from helpers
+                        %>
+                        <div class="week">
+                            <h2 class="week-nr"><%= week.week %></h2>
+                            <%
+                            // for each day, create a div displaying the date
+                            for (let i = 0; i < 7; i++) { %>
+                                <div class="day">
+                                    <%= currentDate.toLocaleDateString('nl-NL', dateFormat) %>
+                                </div>
+                                <%
+                                currentDate.setDate(currentDate.getDate() + 1); //Current date plus one
+                            }
+                            // if this week has assignments
+                            if (week.assignments.length > 0) {
+                                // create a div for each assignment
+                                week.assignments[0].anwb_assignments_id.role.forEach(({anwb_roles_id: role}, i) => {
+                                    const name = week.assignments[0].anwb_assignments_id.person[i].anwb_persons_id.name;
+                                    %>
+                                    <div class="assignment role-<%= role %> <%= name === username ? 'my-assignment' : '' %>"><%= name %></div>
+                                <% });
+                            }
+                
+                            for (let i = 1; i <= 5; i++) { //create a button for each role
+                                %>
+                                <form class="add-assignment role-<%= i %>" method="post" action="/add_assignment/<%= week.id %>/<%= i %>">
+                                    <button class="button-secondary">Add</button>
+                                </form>
+                                <%
+                            }
+                            %>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
         </div>
-    </div>
-    <ul class="upcomming-assignments">
-        <% upcomming.forEach((assignment) => {
-            const startDate = getDateOfIsoWeek(assignment.week);
-            const endDate = new Date();
-            endDate.setDate(startDate.getDate() + 6);
-            %>
-            <li>
-                <p><%= startDate.toLocaleDateString('nl-NL', dateFormat) %> t/m <%= endDate.toLocaleDateString('nl-NL', dateFormat) %></p>
-                <p><%= assignment.assignments[0].anwb_assignments_id.role[0].anwb_roles_id.role %></p>
-            </li>
-        <% }) %>
-    </ul>
+        <div class="upcomming-assignments">
+            <h3>Binnenkort</h3>
+            <ul>
+                <% upcomming.forEach((assignment) => {
+                    const startDate = getDateOfIsoWeek(assignment.week);
+                    const endDate = new Date();
+                    endDate.setDate(startDate.getDate() + 6);
+                    %>
+                    <li>
+                        <p><%= startDate.toLocaleDateString('nl-NL', dateFormat) %> t/m <%= endDate.toLocaleDateString('nl-NL', dateFormat) %> als <%= assignment.assignments[0].anwb_assignments_id.role[0].anwb_roles_id.role %></p>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+    </main>
 </body>
 </html>

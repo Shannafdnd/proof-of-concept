@@ -1,0 +1,72 @@
+:root {
+    --primary-color: #003d86;
+    --secondary-color: #f2f2f2;
+    --tertiary-color: #ffcd00;
+    --highlight-color: #0096da;
+    --background-color: #ffffff;
+    --text-color: #000307;
+    --border-color: #a6a6a6;
+
+    --border: 1px solid var(--border-color);
+    --border-radius-big: 8px;
+    --border-radius-small: 4px;
+}
+
+body {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 1rem;
+    height: calc(100vh - 2rem);
+    padding: 1rem;
+
+    background-color: var(--primary-color);
+}
+
+nav img {
+    width: 2rem;
+    filter: invert(1);
+}
+
+nav img.profile {
+    width: 4rem;
+}
+
+nav .logout {
+    margin-top: auto;
+}
+
+main {
+    max-width: calc(100vw - 6rem);
+    height: 100vh;
+}
+
+button.button-primary {
+    background-color: var(--tertiary-color);
+    color: var(--primary-color);
+    border-radius: var(--border-radius-small);
+    border: none;
+    cursor: pointer;
+}
+
+button.button-secondary {
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius-small);
+    color: var(--background-color);
+    border: none;
+    cursor: pointer;
+}
+
+h1, h2, h3 {
+    color: var(--primary-color)
+}

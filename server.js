@@ -20,7 +20,7 @@ app.use(session({
 }));
 app.locals.getDateOfIsoWeek = getDateOfIsoWeek;
 app.locals.dateFormat = {
-    weekday: "long",
+    weekday: "short",
     day: "numeric",
     month: "long"
 }
@@ -35,10 +35,10 @@ app.get('/', (req, res) => {
         Promise.all([
             fetchJson(apiUrl + '/anwb_roles'),
             fetchJson(weekUrl),
-            fetchJson(apiUrl + `/anwb_week?filter={"assignments":{"anwb_assignments_id":{"person":{"anwb_persons_id":${req.session.userID}}}}}&fields=week,assignments.anwb_assignments_id.role.anwb_roles_id.role`)
-        ]).then(([{data: roles}, {data: weeks}, {data: upcomming}]) => {
-            console.log()
-            res.render('index.ejs', {roles, weeks, upcomming, userID: req.session.userID});
+            fetchJson(apiUrl + `/anwb_week?filter={"assignments":{"anwb_assignments_id":{"person":{"anwb_persons_id":${req.session.userID}}}}}&fields=week,assignments.anwb_assignments_id.role.anwb_roles_id.role`),
+            fetchJson(apiUrl + '/anwb_persons/'+req.session.userID)
+        ]).then(([{data: roles}, {data: weeks}, {data: upcomming}, {data: {name: username}}]) => {
+            res.render('index.ejs', {roles, weeks, upcomming, username});
         })
     }
 })
@@ -127,7 +127,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res) => {
     fetchJson(apiUrl + `/anwb_persons?filter={"name":"${req.body.username}"}`).then(({data}) => {
-        if (data.length === 0) {
+        if (!data || data.length === 0) {
             res.status(401).send('User not found');
         } else {
             req.session.userID = data[0].id
