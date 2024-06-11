@@ -1,33 +1,50 @@
 // *** Express setup ***
 import express from 'express'
+import session from 'express-session'
 import fetchJson from './helpers/fetch-json.js'
 import getDateOfIsoWeek from './helpers/week-to-date.js';
 
 const app = express(),
-apiUrl = 'https://fdnd-agency.directus.app/items';
+apiUrl = 'https://fdnd-agency.directus.app/items',
+weekUrl = apiUrl + '/anwb_week?fields=*,assignments.*,assignments.anwb_assignments_id.*,assignments.anwb_assignments_id.role.anwb_roles_id,assignments.anwb_assignments_id.person.anwb_persons_id.name';
 
 app.set('view engine', 'ejs')
 app.set('views', './views')
 app.set('port', process.env.PORT || 8000)
 app.use(express.static('./public'))
 app.use(express.urlencoded({extended: true}))
+app.use(session({
+    secret: 'SecretKey',
+    resave: false,
+    saveUninitialized: true
+}));
 app.locals.getDateOfIsoWeek = getDateOfIsoWeek;
+app.locals.dateFormat = {
+    weekday: "long",
+    day: "numeric",
+    month: "long"
+}
 
 // *** Routes ***
 
 //index
 app.get('/', (req, res) => {
-    Promise.all([
-        fetchJson(apiUrl + '/anwb_roles'),
-        fetchJson(apiUrl + '/anwb_week?fields=*,assignments.*,assignments.anwb_assignments_id.*,assignments.anwb_assignments_id.role.anwb_roles_id,assignments.anwb_assignments_id.person.anwb_persons_id.name')
-    ]).then(([{data: roles}, {data: weeks}]) => {
-        res.render('index.ejs', {roles, weeks});
-    })
+    if (req.session.userID === undefined) {
+        res.redirect(302, '/login')
+    } else {
+        Promise.all([
+            fetchJson(apiUrl + '/anwb_roles'),
+            fetchJson(weekUrl),
+            fetchJson(apiUrl + `/anwb_week?filter={"assignments":{"anwb_assignments_id":{"person":{"anwb_persons_id":${req.session.userID}}}}}&fields=week,assignments.anwb_assignments_id.role.anwb_roles_id.role`)
+        ]).then(([{data: roles}, {data: weeks}, {data: upcomming}]) => {
+            console.log()
+            res.render('index.ejs', {roles, weeks, upcomming, userID: req.session.userID});
+        })
+    }
 })
 
 app.post('/add_assignment/:week_id/:role_id', (req, res) => {
-    fetchJson(apiUrl + `/anwb_week?filter={"id":${req.params.week_id}}&fields=assignments.anwb_assignments_id.role.anwb_roles_id,assignments.anwb_assignments_id.id`).then(({data: [{assignments}]}) => {
-        console.log(assignments);
+    fetchJson(apiUrl + `/anwb_week/${req.params.week_id}?fields=assignments.anwb_assignments_id.role.anwb_roles_id,assignments.anwb_assignments_id.id`).then(({data: {assignments}}) => {
         if (assignments.length === 0) { //if there is no assignment
             // Patch a new asignment object to week
             fetchJson(apiUrl + '/anwb_week/'+req.params.week_id, {
@@ -53,7 +70,7 @@ app.post('/add_assignment/:week_id/:role_id', (req, res) => {
                                             {
                                                 "anwb_assignments_id": "+",
                                                 "anwb_persons_id": {
-                                                    "id": 1 // TODO: Make a login
+                                                    "id": req.session.userID
                                                 }
                                             }
                                         ]
@@ -63,23 +80,23 @@ app.post('/add_assignment/:week_id/:role_id', (req, res) => {
                         ]
                     }
                 })
-            }).then(console.log);
-        } else {
-            if (assignments[0].anwb_assignments_id.role.find(({anwb_roles_id}) => anwb_roles_id === req.params.role_id) !== undefined) {
+            })
+        } else { //if there is already an assignment, update it with a new role and person
+            const assignment = assignments[0].anwb_assignments_id;
+            if (assignment.role.find(({anwb_roles_id}) => anwb_roles_id === req.params.role_id) !== undefined) {
                 // if this role for this week is already taken
-                res.redirect(209, '/');
+                res.redirect(409, '/');
                 return;
             }
             // Update assignment object in week
-            console.log(assignments[0]);
-            fetchJson(apiUrl + '/anwb_assignments/'+assignments[0].anwb_assignments_id.id, {
+            fetchJson(apiUrl + '/anwb_assignments/' + assignment.id, {
                 method: 'PATCH',
                 headers:  { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     "role": {
                         "create": [
                             {
-                                "anwb_assignments_id": assignments[0].anwb_assignments_id.id,
+                                "anwb_assignments_id": assignment.id,
                                 "anwb_roles_id": {
                                     "id": req.params.role_id
                                 }
@@ -89,15 +106,15 @@ app.post('/add_assignment/:week_id/:role_id', (req, res) => {
                     "person": {
                         "create": [
                             {
-                                "anwb_assignments_id": assignments[0].anwb_assignments_id.id,
+                                "anwb_assignments_id": assignment.id,
                                 "anwb_persons_id": {
-                                    "id": 1 // TODO: Make a login
+                                    "id": req.session.userID
                                 }
                             }
                         ]
                     }
                 })
-            }).then(console.log);
+            })
         }
         res.redirect(301, '/');
     })
@@ -106,6 +123,17 @@ app.post('/add_assignment/:week_id/:role_id', (req, res) => {
 //login
 app.get('/login', (req, res) => {
     res.render('login.ejs');
+})
+
+app.post('/login', (req, res) => {
+    fetchJson(apiUrl + `/anwb_persons?filter={"name":"${req.body.username}"}`).then(({data}) => {
+        if (data.length === 0) {
+            res.status(401).send('User not found');
+        } else {
+            req.session.userID = data[0].id
+            res.redirect(301, '/')
+        }
+    })
 })
 
 //vakanties
@@ -126,3 +154,4 @@ app.listen(app.get('port'), () => {
 //https://docs.directus.io/reference/introduction.html#relational-data
 //https://docs.directus.io/reference/items.html#the-item-object
 //https://docs.directus.io/reference/query.html#fields 
+//https://expressjs.com/en/resources/middleware/session.html

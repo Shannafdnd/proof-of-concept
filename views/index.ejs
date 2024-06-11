@@ -21,19 +21,14 @@
             <%
             // for each week, create a div
             weeks.forEach((week) => {
-                const [year, week_nr] = week.week.split("-W"); //To format in numbers only, and split week and year
-                const currentDate = getDateOfIsoWeek(week_nr, year);//Calculate starting date from helpers
+                const currentDate = getDateOfIsoWeek(week.week);//Calculate starting date from helpers
                 %>
                 <div class="week">
                     <%
                     // for each day, create a div displaying the date
                     for (let i = 0; i < 7; i++) { %>
                         <div class="day">
-                            <%= currentDate.toLocaleDateString('nl-NL', { //Gets string from date
-                                weekday: "long",
-                                day: "numeric",
-                                month: "long"
-                            }) %>
+                            <%= currentDate.toLocaleDateString('nl-NL', dateFormat) %>
                         </div>
                         <%
                         currentDate.setDate(currentDate.getDate() + 1); //Current date plus one
@@ -62,5 +57,17 @@
             <% }) %>
         </div>
     </div>
+    <ul class="upcomming-assignments">
+        <% upcomming.forEach((assignment) => {
+            const startDate = getDateOfIsoWeek(assignment.week);
+            const endDate = new Date();
+            endDate.setDate(startDate.getDate() + 6);
+            %>
+            <li>
+                <p><%= startDate.toLocaleDateString('nl-NL', dateFormat) %> t/m <%= endDate.toLocaleDateString('nl-NL', dateFormat) %></p>
+                <p><%= assignment.assignments[0].anwb_assignments_id.role[0].anwb_roles_id.role %></p>
+            </li>
+        <% }) %>
+    </ul>
 </body>
 </html>

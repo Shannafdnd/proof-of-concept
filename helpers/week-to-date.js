@@ -1,4 +1,5 @@
-export default function getDateOfIsoWeek(week, year) {
+export default function getDateOfIsoWeek(yearWeek) {
+    let [year, week] = yearWeek.split("-W");
     week = parseFloat(week);
     year = parseFloat(year);
   
