@@ -1,3 +1,13 @@
+@font-face {
+    font-family: "ClanPro";
+    src: url("/assets/FFClanProMedium.TTF") format("woff2");
+}
+
+@font-face {
+    font-family: "Bernina Sans";
+    src: url("/public/assets/fonnts.com-Bernina_Sans_Light.otf") format("woff2");
+}
+
 :root {
     --primary-color: #003d86;
     --secondary-color: #f2f2f2;
@@ -10,6 +20,9 @@
     --border: 1px solid var(--border-color);
     --border-radius-big: 8px;
     --border-radius-small: 4px;
+
+    --header-font: "ClanPro", Arial, sans-serif;
+    --regular-font: "Bernina Sans", Arial, sans-serif;
 }
 
 body {
@@ -19,6 +32,7 @@ body {
     width: 100vw;
     height: 100vh;
     margin: 0;
+    font-family: var(--regular-font);
 }
 
 nav {
@@ -68,5 +82,10 @@ button.button-secondary {
 }
 
 h1, h2, h3 {
-    color: var(--primary-color)
+    color: var(--primary-color);
+    font-family: var(--header-font);
+}
+
+.highlight-text {
+    color: var(--highlight-color);
 }

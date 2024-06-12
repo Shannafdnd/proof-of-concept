@@ -4,6 +4,7 @@
 </head>
 <body>
     <%- include('./partials/nav') %>
+    <img class="logo" src="/assets/anwb-logo.png">
     <main>
         <div id="calendar-and-roles">
 
@@ -16,7 +17,7 @@
             </div>
 
             <div id="calendar-wrapper">
-                <h1>Welkom <%= username %></h1>
+                <h1>Welkom, <span class="highlight-text"><%= username %></span>!</h1>
                 <div class="calendar-buttons">
                     <button onclick="scrollCalendar(-1)">
                         <img src="/assets/60053-chevron-left.svg"
@@ -34,13 +35,13 @@
                         <div class="week">
                             <h2 class="week-nr"><%= week.week %></h2>
                             <%
-                            // for each day, create a div displaying the date
-                            for (let i = 0; i < 7; i++) { %>
+                            // for each day of the week, create a div displaying the date
+                            for (let i = 0; i < 7; i++) { %> //make 7 days, if day is less than 7, add one
                                 <div class="day">
                                     <%= currentDate.toLocaleDateString('nl-NL', dateFormat) %>
                                 </div>
                                 <%
-                                currentDate.setDate(currentDate.getDate() + 1); //Current date plus one
+                                currentDate.setDate(currentDate.getDate() + 1); // Current date plus one
                             }
                             // if this week has assignments
                             if (week.assignments.length > 0) {
@@ -48,7 +49,7 @@
                                 week.assignments[0].anwb_assignments_id.role.forEach(({anwb_roles_id: role}, i) => {
                                     const name = week.assignments[0].anwb_assignments_id.person[i].anwb_persons_id.name;
                                     %>
-                                    <div class="assignment role-<%= role %> <%= name === username ? 'my-assignment' : '' %>"><%= name %></div>
+                                    <div class="assignment role-<%= role %> <%= name === username ? 'my-assignment' : '' %>"><%= name %></div> 
                                 <% });
                             }
                 
@@ -69,6 +70,7 @@
             <h3>Binnenkort</h3>
             <ul>
                 <% upcomming.forEach((assignment) => {
+                    // for each upcomming assignment, create a list item with the start date, end date, and role
                     const startDate = getDateOfIsoWeek(assignment.week);
                     const endDate = new Date();
                     endDate.setDate(startDate.getDate() + 6);

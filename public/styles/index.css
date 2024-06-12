@@ -5,6 +5,10 @@ main {
     max-width: calc(100vw - 10rem);
 }
 
+.logo {
+    width: 5rem;
+}
+
 /* #region calendar */
 #calendar-and-roles {
     width: 80%;

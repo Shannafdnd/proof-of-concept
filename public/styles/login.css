@@ -1,0 +1,11 @@
+form {
+    display: flex;
+}
+
+form input {
+    background-color: var(--secondary-color);
+}
+
+h1 {
+    justify-content: center;
+}
