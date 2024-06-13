@@ -3,10 +3,62 @@ import express from 'express'
 import session from 'express-session'
 import fetchJson from './helpers/fetch-json.js'
 import getDateOfIsoWeek from './helpers/week-to-date.js';
+import { gql, request } from 'graphql-request'
 
 const app = express(),
-apiUrl = 'https://fdnd-agency.directus.app/items',
-weekUrl = apiUrl + '/anwb_week?fields=week,assignments.anwb_assignments_id.role.anwb_roles_id,assignments.anwb_assignments_id.person.anwb_persons_id.name';
+apiUrl = 'https://fdnd-agency.directus.app/graphql',
+indexQuery = gql`
+query Index($userID: ID!, $userIDnr: GraphQLStringOrFloat!){
+    roles: anwb_roles {
+        id
+        role
+    }
+    weeks: anwb_week {
+        week
+        assignments {
+            anwb_assignments_id {
+                role {
+                    anwb_roles_id {
+                        id
+                    }
+                }
+                person {
+                    anwb_persons_id {
+                        name
+                    }
+                }
+            }
+        }
+    }
+    upcomming: anwb_week(filter: {
+        assignments: {
+            anwb_assignments_id: {
+                person: {
+                    anwb_persons_id: {
+                        id: {
+                            _eq: $userIDnr
+                        }
+                    }
+                }
+            }
+        }
+    }) {
+        week
+        assignments {
+            anwb_assignments_id {
+                role {
+                    anwb_roles_id {
+                        role
+                    }
+                }
+            }
+        }
+    }
+    user: anwb_persons_by_id(id: $userID) {
+        name
+    }
+}
+`
 
 app.set('view engine', 'ejs')
 app.set('views', './views')
@@ -29,16 +81,12 @@ app.locals.dateFormat = {
 
 //index
 app.get('/', (req, res) => {
+    req.session.userID = 2;
     if (req.session === undefined || req.session.userID === undefined) { //If the user has not logged in yet, it will give an undefined, and we redirect to login
         res.redirect(302, '/login')
     } else {
-        Promise.all([
-            fetchJson(apiUrl + '/anwb_roles'),
-            fetchJson(weekUrl),
-            fetchJson(apiUrl + `/anwb_week?filter={"assignments":{"anwb_assignments_id":{"person":{"anwb_persons_id":${req.session.userID}}}}}&fields=week,assignments.anwb_assignments_id.role.anwb_roles_id.role`), // fetch the upcomming assignments of logged in user
-            fetchJson(apiUrl + '/anwb_persons/' + req.session.userID) // fetch username of logged in user
-        ]).then(([{data: roles}, {data: weeks}, {data: upcomming}, {data: userData}]) => {
-            res.render('index.ejs', {roles, weeks, upcomming, username: userData.name});
+        request({url: apiUrl, document: indexQuery, variables: {userID: req.session.userID, userIDnr: req.session.userID}}).then((data) => {
+            res.render('index', data)
         })
     }
 })

@@ -17,7 +17,7 @@
             </div>
 
             <div id="calendar-wrapper">
-                <h1>Welkom, <span class="highlight-text"><%= username %></span>!</h1>
+                <h1>Welkom, <span class="highlight-text"><%= user.name %></span>!</h1>
                 <div class="calendar-buttons">
                     <button id="prev-button">
                         <img src="/assets/60053-chevron-left.svg"
@@ -50,7 +50,7 @@
                                 week.assignments[0].anwb_assignments_id.role.forEach(({anwb_roles_id: role}, i) => {
                                     const name = week.assignments[0].anwb_assignments_id.person[i].anwb_persons_id.name;
                                     %>
-                                    <div class="assignment role-<%= role %> <%= name === username ? 'my-assignment' : '' %>"><%= name %></div> 
+                                    <div class="assignment role-<%= role.id %> <%= name === user.name ? 'my-assignment' : '' %>"><%= name %></div> 
                                 <% });
                             }
                 
