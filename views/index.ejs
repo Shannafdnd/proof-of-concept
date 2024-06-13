@@ -19,10 +19,10 @@
             <div id="calendar-wrapper">
                 <h1>Welkom, <span class="highlight-text"><%= username %></span>!</h1>
                 <div class="calendar-buttons">
-                    <button onclick="scrollCalendar(-1)">
+                    <button id="prev-button">
                         <img src="/assets/60053-chevron-left.svg"
                     </button>
-                    <button onclick="scrollCalendar(1)">
+                    <button id="next-button">
                         <img src="/assets/60054-chevron-right.svg"
                     </button>
                 </div>
@@ -36,7 +36,8 @@
                             <h2 class="week-nr"><%= week.week %></h2>
                             <%
                             // for each day of the week, create a div displaying the date
-                            for (let i = 0; i < 7; i++) { %> //make 7 days, if day is less than 7, add one
+                            for (let i = 0; i < 7; i++) { //make 7 days, if day is less than 7, add one
+                                %>
                                 <div class="day">
                                     <%= currentDate.toLocaleDateString('nl-NL', dateFormat) %>
                                 </div>
