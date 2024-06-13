@@ -6,7 +6,7 @@ import getDateOfIsoWeek from './helpers/week-to-date.js';
 
 const app = express(),
 apiUrl = 'https://fdnd-agency.directus.app/items',
-weekUrl = apiUrl + '/anwb_week?fields=*,assignments.*,assignments.anwb_assignments_id.*,assignments.anwb_assignments_id.role.anwb_roles_id,assignments.anwb_assignments_id.person.anwb_persons_id.name';
+weekUrl = apiUrl + '/anwb_week?fields=week,assignments.anwb_assignments_id.role.anwb_roles_id,assignments.anwb_assignments_id.person.anwb_persons_id.name';
 
 app.set('view engine', 'ejs')
 app.set('views', './views')
