@@ -71,13 +71,10 @@
             <h3>Binnenkort</h3>
             <ul>
                 <% upcomming.forEach((assignment) => {
-                    // for each upcomming assignment, create a list item with the start date, end date, and role
-                    const startDate = getDateOfIsoWeek(assignment.week);
-                    const endDate = new Date();
-                    endDate.setDate(startDate.getDate() + 6);
+                    // for each upcomming assignment, create a list item with week number and role
                     %>
                     <li>
-                        <p><%= startDate.toLocaleDateString('nl-NL', dateFormat) %> t/m <%= endDate.toLocaleDateString('nl-NL', dateFormat) %> als <%= assignment.assignments[0].anwb_assignments_id.role[0].anwb_roles_id.role %></p>
+                        <p>Weeknr: <%= assignment.week %> Rol: <%= assignment.assignments[0].anwb_assignments_id.role[0].anwb_roles_id.role %></p>
                     </li>
                 <% }) %>
             </ul>
