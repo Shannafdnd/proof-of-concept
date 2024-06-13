@@ -40,7 +40,7 @@
                                 %>
                                 <div class="day">
                                     <%= currentDate.toLocaleDateString('nl-NL', dateFormat) %>
-                                </div>
+                                </div> //sets date to string, in nl format
                                 <%
                                 currentDate.setDate(currentDate.getDate() + 1); // Current date plus one
                             }
@@ -54,7 +54,8 @@
                                 <% });
                             }
                 
-                            for (let i = 1; i <= 5; i++) { //create a button for each role
+                            for (let i = 1; i <= 5; i++) { // iterate from 1 to 5, including 5 (we iterate from 1 because directus starts at 1)
+                                // create a button for each 5 roles, i is the role id in this case
                                 %>
                                 <form class="add-assignment role-<%= i %>" method="post" action="/add_assignment/<%= week.id %>/<%= i %>">
                                     <button class="button-secondary">Add</button>

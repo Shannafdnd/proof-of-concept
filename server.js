@@ -149,10 +149,12 @@ app.listen(app.get('port'), () => {
     console.log(`Application started on http://localhost:${app.get('port')}`)
 })
 
-//BRONNEN
-//https://docs.directus.io/reference/introduction.html#relational-data
-//https://docs.directus.io/reference/items.html#the-item-object
-//https://docs.directus.io/reference/query.html#fields 
-//https://chatgpt.com/c/1774389b-08a6-4461-b68b-5dbf64212558
-//https://www.npmjs.com/package/express-session
-//https://expressjs.com/en/resources/middleware/session.html
+/*
+BRONNEN
+https://docs.directus.io/reference/introduction.html#relational-data
+https://docs.directus.io/reference/items.html#the-item-object
+https://docs.directus.io/reference/query.html#fields 
+https://chatgpt.com/c/1774389b-08a6-4461-b68b-5dbf64212558
+https://www.npmjs.com/package/express-session
+https://expressjs.com/en/resources/middleware/session.html
+*/
