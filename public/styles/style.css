@@ -60,8 +60,13 @@ nav .logout {
     margin-top: auto;
 }
 
+.logo {
+    width: 5rem;
+    margin-right: -5rem;
+}
+
 main {
-    max-width: calc(100vw - 6rem);
+    width: calc(100vw - 6rem);
     height: 100vh;
 }
 

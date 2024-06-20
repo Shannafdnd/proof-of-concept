@@ -1,23 +1,14 @@
 main {
     display: flex;
-    align-items: center;
     padding: 0 2rem;
     max-width: calc(100vw - 10rem);
 }
 
-.logo {
-    width: 5rem;
-    margin-right: -5rem;
-}
-
 /* #region calendar */
-#calendar-and-roles {
+.calendar-and-roles {
     width: 80%;
     display: flex;
-}
-
-#calendar-wrapper {
-    width: calc(100% - 6rem);
+    align-items: center;
 }
 
 .calendar-buttons {
@@ -34,12 +25,14 @@ main {
     width: 2.5rem;
     height: 2.5rem;
     cursor: pointer;
+    margin: 1rem;
 }
 
-#roles {
+.roles {
     display: flex;
     flex-direction: column;
-    padding-top: 15rem;
+    margin: 0;
+    padding-top: 7rem;
 
     row-gap: 1rem;
     width: 6rem;
@@ -67,6 +60,7 @@ main {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
+    height: 31rem;
 }
 
 .week {
@@ -99,24 +93,12 @@ main {
     background-color: var(--background-color);
 }
 
+.unassigned {
+    background-color: var(--secondary-color);
+}
+
 .my-assignment {
     background-color: var(--tertiary-color);
-}
-
-.add-assignment {
-    grid-column: 1 / 8;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    border: var(--border);
-    border-radius: 1rem;
-}
-
-.add-assignment button {
-    width: calc(50% / 7);
-    height: 50%;
 }
 
 /* #region roles */

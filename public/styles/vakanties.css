@@ -1,0 +1,111 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calendar {
+    width: 100%;
+    max-width: 700px;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.month {
+    text-align: center;
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    border-radius: 10px 10px 0 0;
+}
+
+.month ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.month ul li {
+    display: inline;
+    margin: 0 15px;
+    font-size: 20px;
+}
+
+.month .prev,
+.month .next {
+    cursor: pointer;
+}
+
+.weekdays {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    background-color: #ddd;
+    border-top: 1px solid #bbb;
+}
+
+.weekdays li {
+    display: inline-block;
+    width: calc(100% / 7 - 4px);
+    text-align: center;
+    padding: 10px 0;
+    background-color: #ddd;
+}
+
+.days {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: repeat(7, calc(100% / 7 - 1px));
+    grid-template-rows: auto;
+    grid-gap: 1px;
+    overflow: hidden;
+}
+
+.day {
+    display: block;
+    text-align: center;
+    padding-bottom: 5rem;
+    box-shadow:0 0 0 1px #ddd;
+}
+
+.vacation {
+    padding-top: 1rem;
+}
+
+.vacation p {
+    border: 1px solid black;
+    font-size: 0.8rem;
+}
+
+.day:nth-child(7n) {
+    border-right: none;
+}
+
+.day:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.days:has(.day:hover) .start-day,
+.days:has(.day:hover) .start-day ~ .day {
+    background-color: red;
+}
+
+.days:has(.day:hover) .day:hover ~ .day {
+    background-color: unset;
+}
+
+@media screen and (max-width: 720px) {
+    .weekdays li, .days li { width: 13.1%; }
+}
+
+@media screen and (max-width: 420px) {
+    .weekdays li, .days li { width: 12.5%; }
+    .month ul li { font-size: 16px; }
+}

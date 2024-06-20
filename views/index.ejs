@@ -6,80 +6,55 @@
     <%- include('./partials/nav') %>
     <img class="logo" src="/assets/anwb-logo.png">
     <main>
-        <div id="calendar-and-roles">
+        <h1>Welkom</h1>
+        <div class="calendar-and-roles">
 
-            <div id="roles">
-                <%
-                // for each role, create a div
-                roles.forEach(({id, role}) => { %>
-                    <div class="role-name"><%= role %></div>
-                <% }) %>
-            </div>
-
-            <div id="calendar-wrapper">
-                <h1>Welkom, <span class="highlight-text"><%= username %></span>!</h1>
-                <div class="calendar-buttons">
-                    <button id="prev-button">
-                        <img src="/assets/60053-chevron-left.svg"
-                    </button>
-                    <button id="next-button">
-                        <img src="/assets/60054-chevron-right.svg"
-                    </button>
-                </div>
-                <div id="calendar">
-                    <%
-                    // for each week, create a div
-                    weeks.forEach((week) => {
-                        const currentDate = getDateOfIsoWeek(week.week);//Calculate starting date from helpers
-                        %>
-                        <div class="week">
-                            <h2 class="week-nr"><%= week.week %></h2>
-                            <%
-                            // for each day of the week, create a div displaying the date
-                            for (let i = 0; i < 7; i++) { //make 7 days, if day is less than 7, add one
-                                %>
-                                <div class="day">
-                                    <%= currentDate.toLocaleDateString('nl-NL', dateFormat) %>
-                                </div>
-                                <% //sets date to string, in nl format
-                                currentDate.setDate(currentDate.getDate() + 1); // Current date plus one
-                            }
-                            // if this week has assignments
-                            if (week.assignments.length > 0) {
-                                // create a div for each assignment
-                                week.assignments[0].anwb_assignments_id.role.forEach(({anwb_roles_id: role}, i) => {
-                                    const name = week.assignments[0].anwb_assignments_id.person[i].anwb_persons_id.name;
-                                    %>
-                                    <div class="assignment role-<%= role %> <%= name === username ? 'my-assignment' : '' %>"><%= name %></div> 
-                                <% });
-                            }
-                
-                            for (let i = 1; i <= 5; i++) { // iterate from 1 to 5, including 5 (we iterate from 1 because directus starts at 1)
-                                // create a button for each 5 roles, i is the role id in this case
-                                %>
-                                <form class="add-assignment role-<%= i %>" method="post" action="/add_assignment/<%= week.id %>/<%= i %>">
-                                    <button class="button-secondary">Add</button>
-                                </form>
-                                <%
-                            }
-                            %>
-                        </div>
-                    <% }) %>
-                </div>
-            </div>
-        </div>
-        <div class="upcomming-assignments">
-            <h3>Binnenkort</h3>
-            <ul>
-                <% upcomming.forEach((assignment) => {
-                    // for each upcomming assignment, create a list item with week number and role
-                    %>
-                    <li>
-                        <p>Weeknr: <%= assignment.week %> Rol: <%= assignment.assignments[0].anwb_assignments_id.role[0].anwb_roles_id.role %></p>
-                    </li>
+            <ul class="roles">
+                <% rolesData.data.forEach(({role}) => { %>
+                <li class="role-name">
+                    <%= role %>
+                </li>
                 <% }) %>
             </ul>
+
+            <div class="calendar-buttons">
+                <button id="prev-button">
+                    <img src="/assets/60053-chevron-left.svg"
+                </button>
+            </div>
+            <div id="calendar">
+                <% weekData.data.forEach(({week, assignments}) => { %>                    
+                    <div class="week">
+                        <h2 class="week-nr">
+                            <%= week %>
+                        </h2>
+                        <div class="day">Ma</div>
+                        <div class="day">Di</div>
+                        <div class="day">Wo</div>
+                        <div class="day">Do</div>
+                        <div class="day">Vr</div>
+                        <div class="day">Za</div>
+                        <div class="day">Zo</div>
+                        <% if (assignments.length > 0) {
+                            assignments[0].anwb_assignments_id.role.forEach(({anwb_roles_id: role}, i) => {
+                                const name = assignments[0].anwb_assignments_id.person[i].anwb_persons_id.name; %>
+                                <div class="assignment role-<%= role %>"><%= name %></div> 
+                            <%});
+                        } %>
+                        <div class="assignment unassigned role-1">Er is niemand ingedeeld voor deze rol</div>
+                        <div class="assignment unassigned role-2">Er is niemand ingedeeld voor deze rol</div>
+                        <div class="assignment unassigned role-3">Er is niemand ingedeeld voor deze rol</div>
+                        <div class="assignment unassigned role-4">Er is niemand ingedeeld voor deze rol</div>
+                        <div class="assignment unassigned role-5">Er is niemand ingedeeld voor deze rol</div>
+                    </div>
+                <% }) %>
+            </div>
+            <div class="calendar-buttons">
+                <button id="next-button">
+                    <img src="/assets/60054-chevron-right.svg">
+                </button>
+            </div>
         </div>
+
     </main>
 </body>
-</html>
