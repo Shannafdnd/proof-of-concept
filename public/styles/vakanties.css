@@ -62,7 +62,7 @@ main {
     list-style-type: none;
     display: grid;
     grid-template-columns: repeat(7, calc(100% / 7 - 1px));
-    grid-template-rows: auto;
+    grid-template-rows: repeat(5, 6rem);
     grid-gap: 1px;
     overflow: hidden;
 }
@@ -70,21 +70,17 @@ main {
 .day {
     display: block;
     text-align: center;
-    padding-bottom: 5rem;
     box-shadow:0 0 0 1px #ddd;
+    font-size: small;
+}
+
+.day p {
+    margin-top: 0;
 }
 
 .vacation {
-    padding-top: 1rem;
-}
-
-.vacation p {
+    margin: 0;
     border: 1px solid black;
-    font-size: 0.8rem;
-}
-
-.day:nth-child(7n) {
-    border-right: none;
 }
 
 .day:hover {

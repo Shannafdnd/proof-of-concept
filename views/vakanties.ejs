@@ -4,7 +4,10 @@
 </head>
 <body>
     <%- include('./partials/nav') %>
-    <img class="logo" src="/assets/anwb-logo.png">
+    <header>
+        <img class="logo" src="/assets/anwb-logo.png">
+        <h1>Vakanties deze maand:</h1>
+    </header>
     <main>
         <div class="calendar">
             <div class="month">
@@ -30,37 +33,24 @@
             
             <ul class="days">
                 <% for (let day_nr = 1; day_nr <= 30; day_nr++) {
-                    let column = (day_nr - 1) % 7 + 1;
-                    let row = Math.floor((day_nr - 1) / 7) + 1;
                     %>
-                    <li
-                        class="day"
-                        style="grid-column-start: <%= column %>;grid-row-start: <%= row %>"
-                    >
-                        <%= day_nr %>
+                    <li class="day">
+                        <p><%= day_nr %></p>
+                        <%
+                        vakantieData.data.forEach(({name, vacation_days}) => {
+                            vacation_days.forEach((vacation_day) => {
+                                const vacation_day_nr = Number(vacation_day.anwb_vacation_days_id.day.substring(8,10)) // get day number
+                                if (vacation_day_nr === day_nr) {
+                                    %>
+                                    <p class="vacation"><%= name %></p>
+                                    <%
+                                }
+                            })
+                        })
+                        %>
                     </li>
                     <%
-                }
-
-                const vacations_per_day = Array(31).fill(1); // fill array with 30 1's
-
-                vakantieData.data.forEach(({name, vacation_days}) => {
-                    vacation_days.forEach((vacation_day) => {
-                        let day_nr = vacation_day.anwb_vacation_days_id.day.substring(8,10) // get day number
-                        let padding_top = vacations_per_day[day_nr] * 1.4;
-                        vacations_per_day[day_nr]++;
-                        let column = (day_nr - 1) % 7;
-                        let row = Math.floor((day_nr - 1) / 7);
-                        %>
-                        <li
-                            class="vacation"
-                            style="grid-column-start: <%= column %>;grid-row-start: <%= row %>;padding-top: <%= padding_top %>rem"
-                        >
-                            <p><%= name %></p>
-                        </li>
-                        <%
-                    })
-                }) %>
+                } %>
             </ul>
         </div>
     </main>
