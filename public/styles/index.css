@@ -97,10 +97,6 @@ main {
     background-color: var(--secondary-color);
 }
 
-.my-assignment {
-    background-color: var(--tertiary-color);
-}
-
 /* #region roles */
 .role-1 {
     grid-row: 3 / 3;
@@ -143,11 +139,6 @@ main {
 }
 /* #endregion roles */
 /* #endregion calendar */
-
-.upcomming-assignments {
-    background-color: var(--secondary-color);
-    border-radius: var(--border-radius-big);
-}
 
 h1, h3 {
     text-align: center;

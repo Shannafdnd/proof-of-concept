@@ -35,20 +35,6 @@ app.get('/vakanties', (req, res) => {
     })
 })
 
-// app.post('/vakanties', (req, res) => {
-//     fetchJson(ApiUrl).then(({data}) => {
-//         fetchJson( {
-//             method: data[0]?.id ? 'PATCH' : 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify({
-                
-//             }),
-//         }).then(() => {
-//             res.redirect(301, `/post/${req.params.slug}`);
-//         });
-//     })
-// })
-
 app.listen(app.get('port'), () => {
     console.log(`Application started on http://localhost:${app.get('port')}`)
 })

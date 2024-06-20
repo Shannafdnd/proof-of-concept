@@ -88,15 +88,6 @@ main {
     cursor: pointer;
 }
 
-.days:has(.day:hover) .start-day,
-.days:has(.day:hover) .start-day ~ .day {
-    background-color: red;
-}
-
-.days:has(.day:hover) .day:hover ~ .day {
-    background-color: unset;
-}
-
 @media screen and (max-width: 720px) {
     .weekdays li, .days li { width: 13.1%; }
 }
